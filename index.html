@@ -9,7 +9,7 @@
 
 	<!--BootStrap CDN -->
 	<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigidsttxg 5fv="anonymous">
 
     <!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
@@ -22,53 +22,48 @@
 
 	<script type="text/javascript" src="assets\javascript\game.js"></script>
 
+	<!-- jQuery -->
+	<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.js"></script>
+
+
 </head>
 <body>
 
 <!-- Background gif -->
+
 <video width="100%" autoplay loop>
 
   <source src="http://i.imgur.com/V4SElna.mp4" type="video/mp4">
   <source src="http://i.imgur.com/V4SElna.mp4" type="video/ogg">
 	
-</video>
+</video> 
 
 <h1 align="center">HANGMAN</h1>
 
-<H3>Underwater</H3>
+<H4>Underwater</H4>
 
-<!--
-<blockquote class="imgur-embed-pub" lang="en" data-id="V4SElna"><a href="//imgur.com/V4SElna"></a></blockquote>
-<script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
--->
-
-<div class="container">
-<div class="box2">
-
-<p>Press any key to get started!</p>
-<p>Wins</p>
-<p>Current Word</p>
-
-<div id="lines">
-<p>_</p>
-<p>_</p>
-<p>_</p>
-<p>_</p>
-<p>_</p>
-<p>_</p>
-</div>
-
-</div> <!-- container -->
-</div> <!-- box2 -->
-
-<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
-
-<div class="container">
-<div class="box1">
-	
-
-</div> <!-- container -->
-</div> <!-- box1 -->
-
+    <div id="container">
+      <div id="game-section">
+        <h3><b>Press any key to get started!</b></h3>
+        <div>
+        <br>
+          <h3 class="section-title">Wins</h3>
+          <div id="wins"></div>
+        </div>
+        <div id="current-word-section">
+          <h3 class="section-title">Current Word</h3>
+          <div id="current-word"></div>
+        </div>
+        <div id="guesses-remaining-section">
+          <h3 class="section-title">Number of Guesses Remaining</h3>
+          <div id="guesses-remaining"></div>
+        </div>
+        <div id="guessed-letters-section">
+          <h3 class="section-title">Letters Already Guessed</h3>
+          <div id="guessed-letters"></div>
+        </div>
+      </div>
+    </div>
+    
 </body>
-</html>
+</html>  

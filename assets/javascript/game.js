@@ -1,171 +1,187 @@
-var doubleWord = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+var hangmanGame = {
+  wordsToPick: {
+    
+    crab:{
+      
+    },
+    
+    fish: {
 
-var wordBank = ["fish", "shark", "octopus", "squid", "whale", "water", "nemo", "salmon", "jellyfish", "catfish"];
+    },
+    shark: {
+      
+    },
+    octopus: {
+    },
+    
+    squid: {
+    },
+    
+    whale: {
+      
+    },
+    water: {
+      
+    },
+    nemo: {      
 
-// Holds choosenWord
-var choosenWord = "";
+    },
+    salmon: {
 
-// Holds the letters in the word
-var lettersInWord = [];
+    },
+    jellyfish: {
 
-// Holds number of blanks in word
-var numBlanks = 0;
+    },
+    catfish: {
 
-// Holds blanks and successful guesses
-var blanksAndSuccesses = [];
+    },
+    waves: {
+      
+    },
+    lobster: {
+      
+    }
+  },
 
-// Holds wrong guessess
-var wrongLetters = [];
+  wordInPlay: null,
+  lettersOfTheWord: [],
+  matchedLetters: [],
+  guessedLetters: [],
+  guessesLeft: 0,
+  totalGuesses: 0,
+  letterGuessed: null,
+  wins: 0,
 
-//Counters
-var winCount = 0;
-var loseCount = 0;
-var guessessLeft = 9; 
-var rightGuessCounter = 0;
+  setupGame: function() {
 
-//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\///\\//\\\///\\\//\\//\\
+    var objKeys = Object.keys(this.wordsToPick);
+    this.wordInPlay = objKeys[Math.floor(Math.random() * objKeys.length)];
 
-function reset() {
-	
-}
-	//Chooses word randlomly from the wordBank
-	choosenWord = wordBank[Math.floor(Math.random() * wordBank.length)];
+    this.lettersOfTheWord = this.wordInPlay.split("");
+    this.rebuildWordView();
+    this.processUpdateTotalGuesses();
+  },
 
-	// Splits the choosen word into individual letters
-	lettersInWord = choosenWord.split("");
-	// Get the number of blanks
-	numBlanks = lettersInWord.length;
+  updatePage: function(letter) {
+    
+    if (this.guessesLeft === 0) {
+      this.restartGame();
+    }
+    else {
 
-	//RESET
-	letterGuessed = 0;
-	rightGuessCounter = 0;
-	guessessLeft = 0;
-	wrongLetters= [];
-	blanksAndSuccesses = [];
-	doubleWord = ['a', 'b', 'c', 'd', 
-					'e', 'f', 'g', 'h', 
-					'i', 'j', 'k', 'l', 
-					'm', 'n', 'o', 'p', 
-					'q', 'r', 's', 't', 
-					'u', 'v', 'w', 'x', 
-					'y', 'z'];
+      this.updateGuesses(letter);
+      this.updateMatchedLetters(letter);
+      this.rebuildWordView();
 
-	test = false;
-	startGame ();
-}
-function startGame()
-{
+      if (this.updateWins() === true) {
+        this.restartGame();
+      }
+    }
 
-     //Chooses word randomly from the wordBank
-     choosenWord = wordBank[Math.floor(Math.random() * wordBank.length)];
+  },
 
-     lettersInWord = choosenWord.split("");
+  updateGuesses: function(letter) {
 
-     numBlanks = lettersInWord.length;	
+    if ((this.guessedLetters.indexOf(letter) === -1) && (this.lettersOfTheWord.indexOf(letter) === -1)) {
+      this.guessedLetters.push(letter);
+      this.guessesLeft--;
 
-     //RESET
-     rightGuessCounter= 0;
-     guessessLeft = 9;
-     wrongLetters = [];
-     blanksAndSuccesses = [];
-     doubleWord = ['a', 'b', 'c', 'd', 
-					'e', 'f', 'g', 'h', 
-					'i', 'j', 'k', 'l', 
-					'm', 'n', 'o', 'p', 
-					'q', 'r', 's', 't', 
-					'u', 'v', 'w', 'x', 
-					'y', 'z'];
+      document.querySelector("#guesses-remaining").innerHTML = this.guessesLeft;
+      document.querySelector("#guessed-letters").innerHTML =
+      this.guessedLetters.join(", ");
+    }
+  },
 
-	// Populate blanks
-	for (var i = 0; i < numBlanks.length; i++) {
-			blanksAndSuccesses.push("_");
-			document.getElementById('wordToGuess').innerHTML = blanksAndSuccesses;
-}			
+  processUpdateTotalGuesses: function() {
 
-//Changes HTML
+    this.totalGuesses = this.lettersOfTheWord.length + 5;
+    this.guessesLeft = this.totalGuesses;
 
-//joins all elements of an array into a string.
-document.getElementById("wordToGuess").innerHTML = blanksAndSuccesses.join(" ");
-document.getElementById("numGuesses").innerHTML = guessessLeft;
-document.getElementById("winCounter").innerHTML = winCount;
-document.getElementById("loseCounter").innerHTML = loseCount;
+    //  document.querySelector("#guesses-remaining").innerHTML = this.guessesLeft;
+  },
 
-console.log(choosenWord);
-console.log(lettersInWord);
-console.log(numBlanks);
-console.log(blanksAndSuccesses);
-}
+  updateMatchedLetters: function(letter) {
 
-function compareletters(userkey) {
+    for (var i = 0; i < this.lettersOfTheWord.length; i++) {
 
-		console.log("WORKING!");
+      if ((letter === this.lettersOfTheWord[i]) && (this.matchedLetters.indexOf(letter) === -1)) {
+        this.matchedLetters.push(letter);
+      }
+    }
+  },
 
-		// If the user key exist in choosen word then perform this function
-		if(choosenWord.indexOf(userkey) > -1) {
+  rebuildWordView: function() {
 
-			// Loops depending on teh amount of blanks
-			for (var i = 0; i < numBlanks, i++) {
+    var wordView = "";
+    console.log(wordView);
+    for (var i = 0; i < this.lettersOfTheWord.length; i++) {
 
-				// Fills in right index with user key
-				if (lettersInWord[i] === userkey) {
-					rightGuessCounter++
-					blanksAndSuccesses[i] = userkey;
-					document.getElementById("wordToGuess").innerHTML = blanksAndSuccesses.join(" ");
-				}
-			}
-			//Test / Debug
-			console.log(blanksAndSuccesses);
-		}
+      if (this.matchedLetters.indexOf(this.lettersOfTheWord[i]) !== -1) {
+        wordView += this.lettersOfTheWord[i];
+      }
+      else {
+        wordView += "&nbsp;_&nbsp;";
+      }
+   }
 
-	}
-	// Wrong Keys
-	else {
-		wrongLetters.push(userkey);
-		guessessLeft--;
-		// Changes HTML
-		document.getElementById("numGuesses").innerHTML = guessessLeft;
-		document.getElementById("wrongGuesses").innerHTML = wrongLetters;
-		// Test / Debug
-		console.log("Wrong Letters = " + wrongLetters);
-		console.log("Guesses left are " + guessessLeft);
-	}	
+    // document.querySelector("#current-word").innerHTML = wordView;
+  },
 
-}
+  restartGame: function() {
+    document.querySelector("#guessed-letters").innerHTML = "";
+    this.wordInPlay = null;
+    this.lettersOfTheWord = [];
+    this.matchedLetters = [];
+    this.guessedLetters = [];
+    this.guessesLeft = 0;
+    this.totalGuesses = 0;
+    this.letterGuessed = null;
+    this.setupGame();
+    this.rebuildWordView();
+  },
 
-function winLose() {
-	// When number blanks if filled with right words then you win
-	if (rightGuessCounter === numBlanks) {
-		// Counts Wins
-		winCount++;
-		// Changes HTML
-		document.getElementById("winCounter").innerHTML = winCount;
-		alert("You win");
-		reset();
-	} // if statement
-	else if(guessessLeft === 0) {
-		//Counts losses
-		loseCount++;
-		//Changes HTML
-		document.getElementById("loseCounter").innerHTML = loseCount;
-		alert("You lose");
-		reset();
-	}
-}	
+  updateWins: function() {
 
-// Main Process
-// ------------ \\ ------------ // ----------- \\
+    var win;
+    if (this.matchedLetters.length === 0) {
+      win = false;
+    }
+    else {
+      win = true;
+    }
 
-startGame();
+    for (var i = 0; i < this.lettersOfTheWord.length; i++) {
+      if (this.matchedLetters.indexOf(this.lettersOfTheWord[i]) === -1) {
+        win = false;
+      }
+    }
 
+    if (win === true) {
+
+      this.wins = this.wins + 1;
+      document.querySelector("#wins").innerHTML = this.wins;
+
+      document.querySelector("#music").innerHTML = this.wordsToPick[this.wordInPlay].song +
+      " By " + this.wordInPlay;
+
+      document.querySelector("#band-div").innerHTML =
+       "<img class='band-image' src='images/" +
+       this.wordsToPick[this.wordInPlay].picture + "' alt='" +
+       this.wordsToPick[this.wordInPlay].song + "'>";
+
+      var audio = new Audio(this.wordsToPick[this.wordInPlay].preview);
+      audio.play();
+
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+};
+
+hangmanGame.setupGame();
 document.onkeyup = function(event) {
-	test = true;
-	var letterGuessed = event.key;
-	for (var i = 0; i < doubleWord.length; i++) {
-		if(letterGuessed === doubleWord[i] && test === true) {
-			var spliceDword = doubleWord.splice(i,1);
-			// Test / Debug
-			console.log("Double word is = " + doubleWord[i]);
-			console.log("Spliced Word is = " + spliceDword);
-		}
-	}
-}
+  hangmanGame.letterGuessed = String.fromCharCode(event.keyCode).toLowerCase();
+  hangmanGame.updatePage(hangmanGame.letterGuessed);
+};
